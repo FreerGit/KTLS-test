@@ -1,0 +1,3 @@
+[submodule "include/stx"]
+	path = include/stx
+	url = https://github.com/freergit/stx
