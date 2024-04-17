@@ -11,6 +11,8 @@ TARGET := a.out
 BUILD_FOLDER = build
 INCLUDE = ./include
 
+CFLAGS += -Dloff_t=__loff_t -lssl -lcrypto # hack
+
 CFLAGS += -I$(INCLUDE)/stx/stx
 
 SRCS := $(wildcard test/*.c)

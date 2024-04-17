@@ -1,3 +1,6 @@
 [submodule "include/stx"]
 	path = include/stx
 	url = https://github.com/freergit/stx
+[submodule "include/liburing"]
+	path = include/liburing
+	url = https://github.com/axboe/liburing.git

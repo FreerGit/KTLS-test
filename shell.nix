@@ -13,5 +13,8 @@ pkgs.mkShell {
     llvm
     gcc13
     libgcc
+    liburing
+    wolfssl
+    openssl
   ];
 }
