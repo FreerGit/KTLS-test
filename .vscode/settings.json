@@ -1,5 +1,22 @@
 {
     "files.associations": {
-        "tcp.h": "c"
-    }
+        "tcp.h": "c",
+        "array": "c",
+        "deque": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "unistd.h": "c",
+        "in.h": "c",
+        "socket.h": "c",
+        "random": "c",
+        "cerrno": "c",
+        "string.h": "c",
+        "tls.h": "c",
+        "endian.h": "c"
+    },
+    "nixEnvSelector.suggestion": false,
+    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix"
 }

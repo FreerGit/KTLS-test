@@ -4,3 +4,6 @@
 [submodule "include/liburing"]
 	path = include/liburing
 	url = https://github.com/axboe/liburing.git
+[submodule "include/wolfssl"]
+	path = include/wolfssl
+	url = https://github.com/wolfSSL/wolfssl.git
