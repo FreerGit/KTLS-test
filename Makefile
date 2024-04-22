@@ -11,7 +11,7 @@ TARGET := a.out
 BUILD_FOLDER = build
 INCLUDE = ./include
 
-CFLAGS += -Dloff_t=__loff_t -lwolfssl -lssl -lcrypto # hack
+CFLAGS += -Dloff_t=__loff_t -lwolfssl  -lssl -lcrypto # hack
 
 CFLAGS += -I$(INCLUDE)/stx/stx
 

@@ -15,8 +15,12 @@
         "cerrno": "c",
         "string.h": "c",
         "tls.h": "c",
-        "endian.h": "c"
+        "endian.h": "c",
+        "ssl.h": "c",
+        "stx.h": "c",
+        "errno.h": "c"
     },
     "nixEnvSelector.suggestion": false,
-    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix"
+    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
+    "cmake.configureOnOpen": false
 }
