@@ -35,6 +35,17 @@ union sockaddr_t {
   struct sockaddr_in6 saddr6;
 };
 
+bool set_socket_blocking_mode(int fd, bool blocking) {
+  if (fd < 0)
+    return false;
+
+  int flags = fcntl(fd, F_GETFL, 0);
+  if (flags == -1)
+    return false;
+  flags = blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+  return (fcntl(fd, F_SETFL, flags) == 0);
+}
+
 int main(int argc, char **argv) {
   BIO *bio = NULL, *out = NULL;
   int i, len, rv;
@@ -148,24 +159,10 @@ int main(int argc, char **argv) {
     memcpy(&sa.saddr.sin_addr, hosts->h_addr_list[0], hosts->h_length);
     sa.saddr.sin_port = htons(l);
   }
-  sock = socket(hosts->h_addrtype, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
-  // SetSocketBlockingEnabled(sock, false);
-  // rc = connect(sock, sa_ptr, socklen);
-  // if (rc) {
-  //   printf("Error connecting to server\n");
-  //   goto end;
-  // }
-
-  while (connect(sock, (struct sockaddr *)&sa.saddr, sizeof(sa.saddr)) == -1) {
-    if (errno == EAGAIN || errno == EWOULDBLOCK) {
-      /* non-blocking connect, wait for read activity on socket */
-      // tcp_select(sock, 1, 1);
-      continue;
-    } else if (errno == EINPROGRESS || errno == EALREADY) {
-      break;
-    }
-    fprintf(stderr, "ERROR: failed to connect %d\n\n", errno);
-    // ret = -1;
+  sock = socket(hosts->h_addrtype, SOCK_STREAM, IPPROTO_TCP);
+  rc = connect(sock, sa_ptr, socklen);
+  if (rc) {
+    printf("Error connecting to server\n");
     goto end;
   }
 
@@ -174,52 +171,12 @@ int main(int argc, char **argv) {
   SSL_set_options(ssl, SSL_OP_ENABLE_KTLS);
 
   /* Start KTLS */
-  int ret;
-  while (1) {
-    ret = BIO_do_connect(bio);
-    if (ret == 1) {
-      break;
-    }
-
-    int n;
-    struct pollfd pollfd;
-    int ms = 1000; /* timeout */
-
-    int err = SSL_get_error(ssl, (int)ret);
-    switch (err) {
-    case SSL_ERROR_WANT_WRITE:
-    case SSL_ERROR_WANT_READ:
-      pollfd.fd = SSL_get_fd(ssl);
-      pollfd.events = POLLIN | POLLOUT;
-      n = poll(&pollfd, 1, ms);
-      if (n == 1) {
-        continue;
-      } else {
-        // fprintf(stdout, "connect to %s:%d timeouted: %d ms\n",
-        //         host, port, ms);
-        exit(1);
-      }
-
-    case SSL_ERROR_WANT_CONNECT:
-      continue;
-
-    default:
-      // print_ssl_err(ERR_get_error(), "BIO_do_connect");
-      printf("BIO_do_connect");
-      break;
-    }
+  if ((rc = BIO_do_connect(bio)) <= 0) {
+    printf("Error connecting to server (2)\n");
+    goto end;
   }
 
-  if (ret != 1) {
-    fprintf(stderr, "connect to %s:%d failed\n", host, 443);
-    // goto err;
-    exit(1);
-  }
-
-  // if ((rc = BIO_do_connect(bio)) <= 0) {
-  //   printf("Error connecting to server (2)\n");
-  //   goto end;
-  // }
+  set_socket_blocking_mode(sock, false);
 
   /* Status */
   char cipher_ver[32];
