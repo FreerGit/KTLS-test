@@ -1,7 +1,7 @@
 
 CC = gcc
 ifeq ($(BUILD), release)
-CFLAGS = -std=c2x -Os -finline-functions -s -DNDEBUG
+CFLAGS = -std=c2x -O3 -funroll-loops -finline-functions -flto -ffast-math  -Ofast -march=native
 else
 BUILD = debug
 CFLAGS = -std=c2x -Wextra -Wall -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wstrict-overflow=5 -Wwrite-strings  -Wcast-qual -Wswitch-default -Wswitch-enum -Wconversion -Wunreachable-code -fno-omit-frame-pointer -fno-var-tracking-assignments -Wformat=2 -Wno-discarded-qualifiers
@@ -11,7 +11,7 @@ TARGET := a.out
 BUILD_FOLDER = build
 INCLUDE = ./include
 
-CFLAGS += -Dloff_t=__loff_t -lwolfssl  -lssl -lcrypto # hack
+CFLAGS += -Dloff_t=__loff_t -lssl -lcrypto # hack
 
 CFLAGS += -I$(INCLUDE)/stx/stx
 

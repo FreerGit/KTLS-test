@@ -15,7 +15,7 @@ pkgs.mkShell {
     libgcc
     liburing
     wolfssl
-    openssl
+    openssl_3_2
     # pkg-config autoconf automake autotools-dev libtool libev-dev
   ];
 }
